@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.Message;
+import models.Task;
 import utils.DBUtil;
 
 /**
@@ -37,7 +37,7 @@ public class CreateServlet extends HttpServlet {
             EntityManager em = DBUtil.createEntityManager();
             em.getTransaction().begin();
 
-            Message m = new Message();
+            Task m = new Task();
 
             String content = request.getParameter("content");
             m.setContent(content);
@@ -46,8 +46,10 @@ public class CreateServlet extends HttpServlet {
             m.setCreated_at(currentTime);
             m.setUpdated_at(currentTime);
 
+         // データベースに保存
             em.persist(m);
             em.getTransaction().commit();
+            request.getSession().setAttribute("flush", "登録が完了しました。");
             em.close();
 
             response.sendRedirect(request.getContextPath() + "/index");
